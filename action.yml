@@ -1,0 +1,36 @@
+---
+name: Check for prohibited names
+description: Add PR legal scan via Automation
+inputs:
+  org_repo:
+    description: Organisation and Repo for PRs
+    default: ${{ github.repository }}
+    required: true
+  github_token:
+    description: Github token to authenticate the Octokit client
+    required: true
+    default: ${{ github.token }}
+  PR_details:
+    description: PR details
+    required: true
+    default: ${{ github.event.pull_request.number }}      
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+      
+    - name: Install Python dependencies
+      shell: bash
+      env:
+        ORG_REPO: ${{ inputs.org_repo }}
+        PR_details: ${{ github.event.pull_request.number }}
+        GITHUB_TOKEN: ${{ github.token }}
+        WORKSPACE: ${{ github.action_path }}
+      run: |
+        python3 -m venv ${{ github.action_path }}/.venv
+        source ${{ github.action_path }}/.venv/bin/activate
+        pip3 install -r ${{ github.action_path }}/requirements.txt
+        python3 ${{ github.action_path }}/main.py
