@@ -54,7 +54,7 @@ def check_for_prohibited_names(pr):
                     if line.strip() in prohibited_names or re.search("@gmail.com", line) or re.search("@yahoo.com",line):
                         flag = -1
                         print("Prohibited word found in line {0} of file {1}".format(i+1,file.filename))
-                        pr.create_review_comment(body="Prohibited word found!", commit=commits[0],path=file.filename,position=i+1)
+                        pr.create_review_comment(body="Prohibited word found!", commit=commits[0],path=file.filename,line=i+1)
                         violations.append("Prohibited word found in line {0} of file {1}".format(i+1,file.filename))
                 except GithubException as e:
                     print(f"Error on PR : {e}")
